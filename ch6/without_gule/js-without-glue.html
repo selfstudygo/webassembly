@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Interact with JS without Blue Code</title>
+        <script src="../../common/load-wasm.js"></script>
+        <style>
+        #myCanvas {
+            border: 2px solid black;
+        }
+        #actionButtonWrapper {
+            margin-top: 16px;
+        }
+        #actionButton {
+            width: 100px;
+            height: 24px;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>Interact with JS without Glue Code</h1>
+        <canvas id="myCanvas" width="255px" height="255px"></canvas>
+        <div id="actionButtonWrapper">
+            <button id="actionButton">Pause</button>
+        </div>
+        <script>
+        const canvas = document.querySelector('#myCanvas');
+        const ctx = canvas.getContext('2d');
+        const fillCircle = (x, y, radius)=>{
+            console.log(x, y);
+            ctx.fillStyle = '#fed530';
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(x-15, y-15, 6, 0, 2 * Math.PI);
+            ctx.arc(x+15, y-15, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.moveTo(x-20, y+10);
+            ctx.quadraticCurveTo(x, y+30, x+20, y+10);
+            ctx.lineWidth =4;
+            ctx.stroke();
+            ctx.closePath();
+        };
+
+        const env = {
+            table: new WebAssembly.Table({initial: 8, element: 'anyfunc'}),
+            jsFillCircle: fillCircle,
+            jsClearCircle(){
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0,0,255, 255);
+            },
+            g$circle(){},
+            g$isRunning(){},
+        }
+
+        loadWasm('js-without-glue.wasm', {env}).then(({instance})=>{
+            const {init, moveCircle, getIsRunning, setIsRunning} = instance.exports;
+            let timer = null;
+            init();
+            const loopCircleMotion = ()=>{
+                requestAnimationFrame(()=>{
+                    moveCircle();
+                    if(getIsRunning()) loopCircleMotion();
+                });
+            }
+
+            document.querySelector('#actionButton').addEventListener('click', event => {
+                const shouldRun = !getIsRunning();
+                setIsRunning(shouldRun);
+                event.target.innerHTML = shouldRun ? 'Pause' : 'Start';
+                if(shouldRun) {
+                    loopCircleMotion();
+                } else {
+                    cancelAnimationFrame(timer);
+                    timer = null;
+                }
+            });
+
+            loopCircleMotion();
+        })
+        </script>
+    </body>
+</html>

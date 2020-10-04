@@ -1,0 +1,8 @@
+.idea/
+cmake-build-debug/
+build/
+dist/
+node_modules/
+book_data/
+.env
+.vscode/

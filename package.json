@@ -1,0 +1,22 @@
+{
+  "name": "learn-webassembly",
+  "version": "1.0.0",
+  "description": "에이콘 웹어셈블리 책 스터디",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/selfstudygo/webassembly.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/selfstudygo/webassembly.git/issues"
+  },
+  "homepage": "https://github.com/selfstudygo/webassembly.git#readme",
+  "dependencies": {
+    "serve": "^11.3.2"
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>No Glue Code</title>
+    <style>
+        .canvas {
+            width: 255px;
+            height: 255px;
+        }
+
+        .controller {
+            margin-top: 16px;
+        }
+
+        .controller button {
+            width: 100px;
+            height: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>No Glue Code</h1>
+    <canvas id="myCanvas" class="canvas" width="255px" height="255px"></canvas>
+    <div class="controller">
+        <button type="button" id="actionButton">Pause</button>
+    </div>
+    <script src="../../common/load-wasm.js"></script>
+    <script>
+        const canvas = document.querySelector('#myCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const env = {
+            table: new WebAssembly.Table({initial: 8, element: 'anyfunc'}),
+            jsFillRect(x, y, w, h) {
+                ctx.fillStyle = '#00f';
+                ctx.fillRect(x, y, w, h);
+            },
+            jsClearRect() {
+                ctx.fillStyle = '#f00';
+                ctx.fillRect(0, 0, 255, 255);
+            },
+            jsLog(x, y, d){
+                console.log( y===1 ? 'width': 'height', x, d? 'origin' : 'none');
+            },
+            g$isRunning(){console.log(arguments)},
+            g$rect(){console.log(arguments)}
+        }
+
+        loadWasm('without-glue.wasm', { env }).then(({ instance }) => {
+            const {init, moveRect, getIsRunning, setIsRunning} = instance.exports;
+            let timer = null;
+            init();
+            const loopRectMotion = () => {
+                timer = requestAnimationFrame(() => {
+                    moveRect();
+                    if (getIsRunning()) loopRectMotion();
+                })
+            }
+            document.querySelector('#actionButton').addEventListener('click', (e) => {
+                const shouldRun = !getIsRunning();
+                setIsRunning(shouldRun);
+                e.target.innerHTML = shouldRun ? 'Pause' : 'Start';
+                if (shouldRun) {
+                    loopRectMotion();
+                } else {
+                    cancelAnimationFrame(timer);
+                    timer = null;
+                }
+            })
+
+            loopRectMotion();
+        })
+    </script>
+</body>
+
+</html>
