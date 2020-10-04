@@ -1,5 +1,6 @@
 # Learn WebAssembly
 에이콘 웹어셈블리(https://github.com/mikerourke/learn-webassembly#readme) 책 스터디
+c, c++ 파일은 해당 repo에서 가져왔다. 
 
 # Start
 `serve -l 8080`
