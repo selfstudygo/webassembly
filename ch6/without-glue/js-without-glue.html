@@ -58,6 +58,7 @@
             },
             g$circle(){},
             g$isRunning(){},
+            __indirect_function_table: new WebAssembly.Table({initial: 8, element: 'anyfunc'}),
         }
 
         loadWasm('js-without-glue.wasm', {env}).then(({instance})=>{

@@ -18,9 +18,9 @@ extern int jsLog(int x, int y, int z);
 bool isRunning = true;
 
 typedef struct Rect {
+  char direction;
   int x;
   int y;
-  char direction;
 } Rect;
 
 struct Rect rect;

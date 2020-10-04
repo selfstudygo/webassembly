@@ -4,6 +4,10 @@
   "description": "에이콘 웹어셈블리 책 스터디",
   "main": "index.js",
   "scripts": {
+    "serve": "serve -l 8080",
+    "cookbook:web": "browser-sync start --server 'ch7/cookbook/src' --serveStatic 'ch7/cookbook/src' --files 'ch7/cookbook/src/**' --single --no-open --port 4000",
+    "cookbook:api": "json-server --watch \"ch7/cookbook/config/db.json\" --port 4001",
+    "cookbook": "concurrently --kill-others \"npm run cookbook:api\" \"npm run cookbook:web\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +21,11 @@
   },
   "homepage": "https://github.com/selfstudygo/webassembly.git#readme",
   "dependencies": {
+    "concurrently": "^5.3.0",
+    "json-server": "^0.16.2",
     "serve": "^11.3.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.12"
   }
 }
