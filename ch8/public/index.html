@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tetris</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class='wrapper'>
+      <h1>Tetris</h1>
+      <div>
+        <canvas id="canvas"></canvas>
+        <div class="scoreWrapper">
+          <span>ROWS: </span>
+          <span id="score"></span>
+        </div>
+      </div>
+    </div>
+    <script src="index.js"></script>
+    <script>
+      Module({canvas: document.getElementById('canvas')});
+    </script>
+  </body>
+</html>
